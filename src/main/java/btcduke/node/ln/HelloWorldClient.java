@@ -32,7 +32,7 @@ public class HelloWorldClient {
       e.printStackTrace();
       return;
     }
-    System.out.println("ID pubkey: " + response.getIdentityPubkey());
+    System.out.println("Response: " + response);
   }
   
   private static LightningGrpc.LightningBlockingStub buildConnection() throws IOException {
