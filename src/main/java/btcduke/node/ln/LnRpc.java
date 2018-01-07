@@ -26,11 +26,15 @@ import lnrpc.Rpc.GetInfoRequest;
 import lnrpc.Rpc.GetInfoResponse;
 import lnrpc.Rpc.Invoice;
 import lnrpc.Rpc.LightningAddress;
+import lnrpc.Rpc.ListChannelsRequest;
+import lnrpc.Rpc.ListChannelsResponse;
 import lnrpc.Rpc.ListPeersRequest;
 import lnrpc.Rpc.ListPeersResponse;
 import lnrpc.Rpc.OpenChannelRequest;
 import lnrpc.Rpc.PendingChannelRequest;
 import lnrpc.Rpc.PendingChannelResponse;
+import lnrpc.Rpc.SendRequest;
+import lnrpc.Rpc.SendResponse;
 import lnrpc.Rpc.WalletBalanceRequest;
 import lnrpc.Rpc.WalletBalanceResponse;
 
@@ -191,17 +195,17 @@ public class LnRpc {
 		}
 	}
 	
-//	public PayInvoiceResponse PayInvoice(final long value) throws LnRpcException {
-//		checkForConnected("PayInvoice");
-//		try {
-//			Invoice request = Invoice.newBuilder().setValue(value).build();
-//			PayInvoiceResponse response;
-//			response = blockingStub.PayInvoice(request);
-//			return response;
-//		} catch (StatusRuntimeException e) {
-//			throw new LnRpcException("PayInvoice failed", e);
-//		}
-//	}	
+	public SendResponse payInvoice(final String paymentHash) throws LnRpcException {
+		checkForConnected("PayInvoice");
+		try {
+			SendRequest request = SendRequest.newBuilder().setPaymentHashString(paymentHash).build();
+			SendResponse response;
+			response = blockingStub.sendPaymentSync(request);
+			return response;
+		} catch (StatusRuntimeException e) {
+			throw new LnRpcException("PayInvoice failed", e);
+		}
+	}	
 	
 	public ChannelBalanceResponse channelBalance() throws LnRpcException {
 		checkForConnected("ChannelBalance");
@@ -226,6 +230,18 @@ public class LnRpc {
 			throw new LnRpcException("PendingChannels failed", e);
 		}
 	}
+	
+	public ListChannelsResponse listChannels() throws LnRpcException {
+		checkForConnected("ListChannelss");
+		try {
+			ListChannelsRequest request = ListChannelsRequest.newBuilder().getDefaultInstanceForType();
+			ListChannelsResponse response;
+			response = blockingStub.listChannels(request);
+			return response;
+		} catch (StatusRuntimeException e) {
+			throw new LnRpcException("ListChannelss failed", e);
+		}
+	}	
 
 	public static void main(String[] args) throws Exception {
 		LnRpc lnRpc1 = new LnRpc();
@@ -238,15 +254,20 @@ public class LnRpc {
 		System.out.println("LND1 Info: \n" + lnRpc1.getInfo());
 //		System.out.println("LND2 Info: \n" + lnRpc2.getInfo());
 
-//		System.out.println("List channels: \n" + lnRpc1.listChannels());
+//		System.out.println("List channels: \n" + lnRpc1.payInvoice("lntb17u1pdyenslpp5m05pgxh70d5tzw90cz0cgyzscs03ay20cx66jln6uhrwlg3k2mtqdpzxysy2umswfjhxum0yppk76twypgxzmnwvypmd2cc3gem25r8afma3ckxg7etqlv0yvzzek9q90c9xpemuejmppyns2gx29zvr7acag3el0kyk8p9kg5tzjy55s6c7gq3dls2avrzspp84xzl"));
 
-		System.out.println("Channel balance: \n" + lnRpc1.channelBalance());
+//		System.out.println("Channel balance: \n" + lnRpc1.channelBalance());
 		
 		System.out.println("Add invoice: \n" + lnRpc1.addInvoice(1000));
 		
-//		System.out.println("Pending channels: \n" + lnRpc1.pendingChannels());
-//		
-//		lnRpc1.closeChannel("6fac4a6991f8e219673fb4413af80577e60d3a07365dc503f2413804ccfc5dda");
+//		System.out.println("PENDING CHANNELS\n" + lnRpc1.pendingChannels());
+		
+//		System.out.println("OPENED CHANNELS:\n" + lnRpc1.listChannels());
+		
+//		System.out.println(lnRpc1.connectPeer("0391b3b093a16ccd5c76a8dd2fb31439a6348811f35e5410a07cbeb121c54a8d9f", "95.23.210.34:9735"));
+//		System.out.println(lnRpc1.openChannel("0391b3b093a16ccd5c76a8dd2fb31439a6348811f35e5410a07cbeb121c54a8d9f", 100000, 60000));
+		
+		//		lnRpc1.closeChannel("6fac4a6991f8e219673fb4413af80577e60d3a07365dc503f2413804ccfc5dda");
 
 //		System.out.println("Connect peer resp:\n" +
 //		lnRpc1.connectPeer("0338703b798e569fc82bd8d95abaea142af1704f76dd39124a3d99206a0ec24001",
