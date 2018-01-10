@@ -27,14 +27,17 @@ public class LnJsonRpc {
 
 	public static void main(String[] args) throws Throwable {
 		
-		String user = "cd";
-		String pw = "cd";
+//		String user = "cd";
+//		String pw = "cd";
 		
-		  String cred = Base64.getEncoder().encodeToString((user + ":" + pw).getBytes()); 
-		  Map<String, String> headers = new HashMap<>(1); 
-		  headers.put("Authorization", "Basic " + cred); 
-		  JsonRpcHttpClient client = new JsonRpcHttpClient(new URL("http://localhost:8332/"), headers); 
-		  
+		JsonRpcHttpClient client = new JsonRpcHttpClient(
+			    new URL("file:/home/cd/.lightning/lightning-rpc"));
+//		
+//		  String cred = Base64.getEncoder().encodeToString((user + ":" + pw).getBytes()); 
+//		  Map<String, String> headers = new HashMap<>(1); 
+//		  headers.put("Authorization", "Basic " + cred); 
+//		  JsonRpcHttpClient client = new JsonRpcHttpClient(new URL("http://localhost:8332/"), headers); 
+//		  
 		  
 		  
 //		JsonRpcHttpClient client = new JsonRpcHttpClient(
@@ -42,7 +45,7 @@ public class LnJsonRpc {
 
 
 		//	String user = client.invoke("createUser", new Object[] { "bob", "the builder" }, String.class);
-//			String user = client.invoke("help", new Object[] {}, String.class);
+			String user = client.invoke("help", new Object[] {}, String.class);
 
 	}
 	

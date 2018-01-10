@@ -19,7 +19,7 @@ public class WalletListener extends Observable implements Observer {
 		if (BitcoindClientFactory.walletSocket!=null){
 			walletListener = new BitcoinDListener(BitcoindClientFactory.walletSocket);
 		}else{
-			walletListener = new BitcoinDListener(4002);
+			walletListener = new BitcoinDListener(18332);
 		}
 		this.client = client;
 	}
