@@ -11,6 +11,30 @@ import jnr.unixsocket.UnixSocketAddress;
 import jnr.unixsocket.UnixSocketChannel;
 
 public class UnixClient {
+	
+	private static String readJson(String request, UnixSocketChannel channel) throws IOException {
+//        String data = "{\"id\": 1, \"jsonrpc\":\"2.0\", \"method\": \"help\", \"params\": [\"hello\"]}";
+        System.out.println("connected to " + channel.getRemoteSocketAddress());
+        PrintWriter w = new PrintWriter(Channels.newOutputStream(channel));
+        w.print(request);
+        w.flush();
+
+        InputStreamReader r = new InputStreamReader(Channels.newInputStream(channel));
+        CharBuffer result = CharBuffer.allocate(1024);
+        StringBuilder builder = new StringBuilder();
+        while(true) {
+        	int bytesRead = r.read(result);
+        	result.flip();
+        	builder.append(result);
+        	
+        	if(bytesRead < 1024) {
+        		break;
+        	}
+        }
+        return builder.toString();
+	}
+	
+	
     public static void main(String[] args) throws IOException, InterruptedException {
         java.io.File path = new java.io.File("/home/cd/.lightning/lightning-rpc");
         int retries = 0;
@@ -26,28 +50,13 @@ public class UnixClient {
                 );
             }
         }
-        String data = "{\"id\": 1, \"jsonrpc\":\"2.0\", \"method\": \"help\", \"params\": [\"hello\"]}";
+        
         UnixSocketAddress address = new UnixSocketAddress(path);
         UnixSocketChannel channel = UnixSocketChannel.open(address);
-        System.out.println("connected to " + channel.getRemoteSocketAddress());
-        PrintWriter w = new PrintWriter(Channels.newOutputStream(channel));
-        w.print(data);
-        w.flush();
 
-        InputStreamReader r = new InputStreamReader(Channels.newInputStream(channel));
-        CharBuffer result = CharBuffer.allocate(1024);
-        while(r.read(result) > 0) {
-        	result.flip();
-        	System.out.println("read from server: " + result.toString());
-        }
-//        final int status;
-//        if (!result.toString().equals(data)) {
-//            System.out.println("ERROR: data mismatch");
-//            status = -1;
-//        } else {
-//            System.out.println("SUCCESS");
-//            status = 0;
-//        }
-//        System.exit(status);
+        System.out.println("read from server: " + readJson("{\"id\": 1, \"jsonrpc\":\"2.0\", \"method\": \"help\", \"params\": [\"hello\"]}", channel));;
+
+        channel.close();
+        
     }
 }
