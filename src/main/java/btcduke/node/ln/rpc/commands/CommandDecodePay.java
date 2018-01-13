@@ -6,9 +6,7 @@ import btcduke.node.rpc.NodeRpcRequest;
 
 public class CommandDecodePay extends Command<DecodePayResponse> {
 	
-//	public NodeRpcRequest request = new NodeRpcRequest("decodepay");
-//	public DecodePayResponse response;
-	
+
 	public CommandDecodePay(String invoice) {
 		request = new NodeRpcRequest("decodepay");
 		request.params = new String[1];

@@ -82,7 +82,8 @@ public class UnixSocket implements AutoCloseable {
 	public void execute(Command command/*NodeRpcRequest request, final Class<T> clazz*/) throws NodeRpcException {
 		String requestStr = null;
 		try {
-			requestStr = gson.toJson(command.request);
+			requestStr = gson.toJson(command.getRequest());
+			System.out.println("REQUEST: " + requestStr);
 //			StringBuilder requestBuilder = new StringBuilder();
 //			requestBuilder.append("{\"id\": 1, \"jsonrpc\":\"2.0\"");
 //			requestBuilder.append("\"method\": \"" + method + "\", \"params\": [");
@@ -100,27 +101,9 @@ public class UnixSocket implements AutoCloseable {
 			int bytesRead = r.read(respChBuf);
 			respChBuf.flip();
 			String respStr = respChBuf.toString();
-			command.response = gson.fromJson(respStr, command.response.getClass());
-//			DecodePayResponse resp = load(r, DecodePayResponse.class);
-//			System.out.println(resp);
-//			
-//			return resp.toString();
-			
-//			CharBuffer response = CharBuffer.allocate(bufferSize);
-//			StringBuilder responseBuilder = new StringBuilder();
-//			
-//			int bytesRead = r.read(response);
-//			if(bytesRead == -1) {
-//				throw new NodeRpcException("No response from RPC");
-//			}
-//			
-//			do {
-//			  	response.flip();
-//			  	responseBuilder.append(response);
-//			  	bytesRead = r.read(response);
-//			} while(bytesRead == bufferSize);
+			System.out.println("RESPONSE: " + respStr);
+			command.response = gson.fromJson(respStr, command.getResponse().getClass());
 
-//			return respStr;
 		} catch(Throwable ex) {
 			throw new NodeRpcException("Cannot execute request '" + requestStr + "'", ex);
 		}

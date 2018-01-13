@@ -2,7 +2,16 @@ package btcduke.node.rpc;
 
 public class Command<T extends NodeRpcResponse> {
 	
-	public NodeRpcRequest request;
-	public T response;
+	protected NodeRpcRequest request;
+	protected T response;
+	
+	public NodeRpcRequest getRequest() {
+		return request;
+	}
+	
+	public T getResponse() {
+		return response;
+	}
+	
 	
 }

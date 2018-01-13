@@ -43,16 +43,14 @@ public class UnixClient {
 	
 	
     public static void main(String[] args) {
-    	
-    	
-    	
+   
 	    	CommandDecodePay cmdDecodePay = new CommandDecodePay("lntb19u1pd93kn4pp5zvlshe4zl73kzf8q0cc62m3ak3y9hw70ea8z0hyxqptpwjh5e9wsdp8xys9xcmpd3sjqsmgd9czq3njv9c8qatrvd5kumcrshr5j7ewzpkqk3yssdh9y528w8h2urcxsdhkg6puhkp0djh76jhs93akzg82v0qlzt6hg4x0w6hfmkpdgy58wr96zvw4d2w9wn8gycqzce23w");
 	
 	    	try(UnixSocket sock = new UnixSocket("/home/cd/.lightning/lightning-rpc")) {
 	    		for(int i=0; i<100000; i++) {
 	    		sock.execute(cmdDecodePay);
 	    		if(i % 1000 == 0) {
-	    			System.out.println("" + i + " : " + cmdDecodePay.response.result.msatoshi);
+	    			System.out.println("" + i + " : " + cmdDecodePay.getResponse().result.msatoshi);
 	    		}
 	    		}
 	    	} catch(NodeRpcException ex) {

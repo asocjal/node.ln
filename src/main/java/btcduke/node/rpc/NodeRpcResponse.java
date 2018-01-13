@@ -4,6 +4,6 @@ public class NodeRpcResponse {
 	
 	public int id;
 	public String jsonrpc;
-//	public String result;
+	public String error;
 
 }
