@@ -2,7 +2,7 @@ package btcduke.node.ln;
 
 import org.junit.Assert;
 
-import btcduke.node.ln.rpc.commands.CommandDecodePay;
+import btcduke.node.ln.rpc.commands.DecodePayCommand;
 import btcduke.node.rpc.NodeRpcException;
 import btcduke.node.rpc.UnixSocket;
 import junit.framework.Test;
@@ -24,7 +24,7 @@ public class DecodePayTest extends TestCase {
 
 
 	public void testDecodePay() {
-		CommandDecodePay cmdDecodePay = new CommandDecodePay(
+		DecodePayCommand cmdDecodePay = new DecodePayCommand(
 				"lntb19u1pd93kn4pp5zvlshe4zl73kzf8q0cc62m3ak3y9hw70ea8z0hyxqptpwjh5e9wsdp8xys9xcmpd3sjqsmgd9czq3njv9c8qatrvd5kumcrshr5j7ewzpkqk3yssdh9y528w8h2urcxsdhkg6puhkp0djh76jhs93akzg82v0qlzt6hg4x0w6hfmkpdgy58wr96zvw4d2w9wn8gycqzce23w");
 
 		/*
@@ -68,7 +68,7 @@ public class DecodePayTest extends TestCase {
 	}
 	
 	public void testDecodeInvalidPay() {
-		CommandDecodePay cmdDecodePay = new CommandDecodePay(
+		DecodePayCommand cmdDecodePay = new DecodePayCommand(
 				"lntb19u1pd93kn4pp5zvlshe4zl73kzf8q0cc62m3ak3y9hw70ea8z0hyxqptpwjh5e9wsdp8xys9xcmpd3sjqsmgd9czq3njv9c8qatrvd5kumcrshr5j7ewzpkqk3yssdh9y528w8h2urcxsdhkg6puhkp0djh76jhs93akzg82v0qlzt6hg4x0w6hfmkpdgy58wr96zvw4d2w9wn8gycqzce23");
 
 		try (UnixSocket sock = new UnixSocket("/home/cd/.lightning/lightning-rpc")) {
