@@ -63,6 +63,7 @@ public class DecodePayTest extends TestCase {
 
 		} catch (NodeRpcException ex) {
 			ex.printStackTrace();
+			Assert.fail("Exception thrown: '" + ex.getMessage() + "'.");
 		}
 	}
 	
@@ -74,14 +75,22 @@ public class DecodePayTest extends TestCase {
 
 			sock.execute(cmdDecodePay);
 			
+			Assert.fail("Exception not thrown for decode invalid pay");
+			
+		} catch (NodeRpcException ex) {
 			Assert.assertNotEquals("Command is null", null, cmdDecodePay);
 			Assert.assertNotEquals("Command's request is null", null, cmdDecodePay.getRequest());
 			Assert.assertNotEquals("Command's response is null", null, cmdDecodePay.getResponse());	
 			Assert.assertEquals("Error message incorrect", "Invalid bolt11: Bad bech32 string", cmdDecodePay.getResponse().error);
 			Assert.assertEquals("Command's result is not null", null, cmdDecodePay.getResponse().result);
 
-		} catch (NodeRpcException ex) {
-			ex.printStackTrace();
+			Assert.assertNotNull("Exception cause is null", ex.getCause());
+			Assert.assertEquals("Server cause do not equals cause", ex.getCause(), ex.getServerCause());
+			Assert.assertEquals("Exception message incorrect", "Invalid bolt11: Bad bech32 string", ex.getServerCause().getMessage());
+//			Assert.assertEquals("Exception message incorrect", "{\"id\":183723173,\"jsonrpc\":\"2.0\",\"method\":\"decodepay\",\"params\":[\"lntb19u1pd93kn4pp5zvlshe4zl73kzf8q0cc62m3ak3y9hw70ea8z0hyxqptpwjh5e9wsdp8xys9xcmpd3sjqsmgd9czq3njv9c8qatrvd5kumcrshr5j7ewzpkqk3yssdh9y528w8h2urcxsdhkg6puhkp0djh76jhs93akzg82v0qlzt6hg4x0w6hfmkpdgy58wr96zvw4d2w9wn8gycqzce23\"]}", serverException.getRequestJson());
+			Assert.assertEquals("Exception message incorrect", "{ \"jsonrpc\": \"2.0\",  \"error\" : \"Invalid bolt11: Bad bech32 string\", \"id\" : 183723173 }", ex.getServerCause().getResponseJson());
+			Assert.assertEquals("Exception doesn't contain correct command", cmdDecodePay, ex.getServerCause().getCommand());
+		
 		}
 	}
 	

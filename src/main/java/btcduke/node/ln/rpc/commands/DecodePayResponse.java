@@ -1,6 +1,6 @@
-package btcduke.node.rpc;
+package btcduke.node.ln.rpc.commands;
 
-
+import btcduke.node.rpc.NodeRpcResponse;
 
 public class DecodePayResponse extends NodeRpcResponse {
 

@@ -79,18 +79,13 @@ public class UnixSocket implements AutoCloseable {
 		}
 	}
 
-	public void execute(Command command/*NodeRpcRequest request, final Class<T> clazz*/) throws NodeRpcException {
+	@SuppressWarnings({ "rawtypes", "unchecked" }) // TODO: Is there better way?
+	public void execute(Command command) throws NodeRpcException {
 		String requestStr = null;
 		try {
 			requestStr = gson.toJson(command.getRequest());
 			System.out.println("REQUEST: " + requestStr);
-//			StringBuilder requestBuilder = new StringBuilder();
-//			requestBuilder.append("{\"id\": 1, \"jsonrpc\":\"2.0\"");
-//			requestBuilder.append("\"method\": \"" + method + "\", \"params\": [");
-//			
-//			}
-//			request = "{\"id\": 1, \"jsonrpc\":\"2.0\", \"method\": \"" + method + "\", \"params\": [\"hello\"]}";
-//			System.out.println("Executing " + requestStr);
+
 			PrintWriter w = new PrintWriter(Channels.newOutputStream(channel));
 			w.print(requestStr);
 			w.flush();
@@ -99,10 +94,17 @@ public class UnixSocket implements AutoCloseable {
 			
 			CharBuffer respChBuf = CharBuffer.allocate(bufferSize);
 			int bytesRead = r.read(respChBuf);
+			if(bytesRead == bufferSize) {
+				throw new NodeRpcException("Response from server out of buffer");
+			}
 			respChBuf.flip();
 			String respStr = respChBuf.toString();
 			System.out.println("RESPONSE: " + respStr);
 			command.response = gson.fromJson(respStr, command.getResponse().getClass());
+			
+			if(command.getResponse().error != null) {
+				throw new RpcServerException(command.getResponse().error, requestStr, respStr, command);
+			}
 
 		} catch(Throwable ex) {
 			throw new NodeRpcException("Cannot execute request '" + requestStr + "'", ex);
