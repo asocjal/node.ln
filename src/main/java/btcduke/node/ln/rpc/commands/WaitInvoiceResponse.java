@@ -5,9 +5,11 @@ import btcduke.node.rpc.NodeRpcResponse;
 public class WaitInvoiceResponse extends NodeRpcResponse {
 
 	public class WaitInvoiceResult {
+		public String label;
 		public String rhash;
-		public long expiry_time;
-		public String bolt11;
+		public long msatoshi;
+		public boolean complete;
+		public int pay_index;
 	}
 
 	public WaitInvoiceResult result;

@@ -26,7 +26,7 @@ public class WaitInvoiceTest extends TestCase {
 		
 		try (UnixSocket sock2 = new UnixSocket("/home/cd/.lightning/lightning-rpc")) {
 
-			WaitInvoiceCommand waitInvoiceCommand = new WaitInvoiceCommand("kawka5");
+			WaitInvoiceCommand waitInvoiceCommand = new WaitInvoiceCommand("kawka3");
 
 			sock2.execute(waitInvoiceCommand);
 			
@@ -34,6 +34,14 @@ public class WaitInvoiceTest extends TestCase {
 			Assert.assertNotEquals("Command's request is null", null, waitInvoiceCommand.getRequest());
 			Assert.assertNotEquals("Command's response is null", null, waitInvoiceCommand.getResponse());
 			Assert.assertNotEquals("Command's result is null", null, waitInvoiceCommand.getResponse().result);
+			Assert.assertNotEquals("Label is null", null, waitInvoiceCommand.getResponse().result.label);
+			Assert.assertNotEquals("Label is empty", waitInvoiceCommand.getResponse().result.label.length() > 0);
+			Assert.assertNotEquals("Rhash has wrong size", waitInvoiceCommand.getResponse().result.rhash.length() == 64);
+			Assert.assertNotEquals("msatoshi is not positive value", waitInvoiceCommand.getResponse().result.msatoshi > 0);
+			Assert.assertNotEquals("Pay index is negative value", waitInvoiceCommand.getResponse().result.pay_index >= 0);
+			Assert.assertNotEquals("Complete is not true", waitInvoiceCommand.getResponse().result.complete == true);
+
+			
 			
 		} catch (NodeRpcException ex) {
 			ex.printStackTrace();
